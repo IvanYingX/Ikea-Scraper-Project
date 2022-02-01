@@ -101,13 +101,14 @@ class Scraper():
         # sofa link list
         self.item_links_list = []
         self.image_links = []
-        for sofa in self.sofa_items:
-            a_tag = sofa.find_element(By.TAG_NAME, 'a')
-            sofa_link = a_tag.get_attribute('href')
-            self.item_links_list.append(sofa_link)
 
-            image_tag = sofa.find_element(self.BY.TAG_NAME, 'img')
-            self.image_links.append(image_tag.get_attribute('src'))
+        while len(self.image_links)< 1000:
+            for sofa in self.sofa_items:
+                a_tag = sofa.find_element(By.TAG_NAME, 'a')
+                sofa_link = a_tag.get_attribute('href')
+                self.item_links_list.append(sofa_link)
+                image_tag = sofa.find_element(self.BY.TAG_NAME, 'img')
+                self.image_links.append(image_tag.get_attribute('src'))
 
     def extract_info(self):
         """
