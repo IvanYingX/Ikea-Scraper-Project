@@ -1,4 +1,4 @@
-from ikea_web_scraper.project.__main__ import Scraper
+from ikea_scraper.project.__main__ import Scraper
 
 
 print('This scraper has returned the sofa samples from Ikea. The data is presented in a json file')
