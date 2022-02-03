@@ -46,7 +46,7 @@ class Scraper():
         """
         #setting headless mode
         options = Options()
-        options.headless = True
+        options.headless = False
         
         #standard scraper init
         self.driver = webdriver.Chrome(options=options)
@@ -88,10 +88,11 @@ class Scraper():
         self.WebDriverWait(self.driver, 20).until(
             self.EC.element_to_be_clickable((self.BY.XPATH, sofas_button))).click()
 
-        for i in range(0):
+        for i in range(42):
             try:
-                show_more_button = WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[8]/div/div/div[5]/div[1]/div/div[3]/a')))
+                show_more_button = self.WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[8]/div/div/div[6]/div/div/div[3]/a')))
                 self.driver.execute_script("arguments[0].click();", show_more_button)
+                time.sleep(2)
             except TimeoutException:
                 pass
 
@@ -115,7 +116,8 @@ class Scraper():
                 self.item_links_list.append(sofa_link)
                 image_tag = sofa.find_element(self.BY.TAG_NAME, 'img')
                 self.image_links.append(image_tag.get_attribute('src'))
-
+                
+    
     def extract_info(self):
         """
         This method extracts all the data points for each item, adds a UUID, and concatenates them into a dictionary.
@@ -213,6 +215,9 @@ class Scraper():
             'sofa_samples.json', 'aicore-group3-ikea-items', 'sofa_samples.json')
 
     def upload_to_RDS(self):
+        """
+        This method conects to an rds instance and sql database to present the data in table form.
+        """
         DATABASE_TYPE = database_type
         DBAPI = dbapi
         ENDPOINT = endpoint 
@@ -223,8 +228,9 @@ class Scraper():
 
         engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}").connect()
         self.sofa_df = pd.DataFrame.from_dict(self.sofa_dict)
+        
         self.sofa_df.to_sql("sofa_data_samples", engine, if_exists='replace')
-        print("Sofa data samples can be view on sql database")
+        print("Sofa data samples can be view an sql database")
 
 if __name__ == '__main__':
     ikea = Scraper()
