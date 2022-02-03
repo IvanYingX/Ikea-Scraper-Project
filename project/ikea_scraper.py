@@ -15,6 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
 import time
 import boto3
 import uuid
@@ -43,7 +44,12 @@ class Scraper():
 
         This function identifies the URL as the Ikea website home page and uses the Chrome Webdriver to open it.
         """
-        self.driver = webdriver.Chrome()
+        #setting headless mode
+        options = Options()
+        options.headless = True
+        
+        #standard scraper init
+        self.driver = webdriver.Chrome(options=options)
         self.driver.get(url)
         self.WebDriverWait = WebDriverWait
         self.EC = EC
